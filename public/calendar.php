@@ -55,46 +55,204 @@ while ($task = $result->fetch_assoc()) {
   <meta charset="UTF-8">
   <title>Task Calendar</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f8f9fa;
-      margin: 0;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .fc-event {
-      cursor: pointer;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 400px;
-    }
-    .close-btn {
-      float: right;
-      cursor: pointer;
-      font-weight: bold;
-    }
+    <style>
+/* Base */
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+body {
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Header */
+.container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2b2d42;
+}
+
+/* Filter */
+form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  font-weight: 500;
+  color: #555;
+}
+
+select {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+select:hover,
+select:focus {
+  border-color: #4361ee;
+  outline: none;
+}
+
+/* Calendar */
+#calendar {
+  margin-top: 1rem;
+}
+
+/* FullCalendar overrides */
+.fc {
+  font-size: 0.75rem;
+
+  
+}
+
+.fc-toolbar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2b2d42;
+}
+
+.fc-button {
+  background: #4361ee !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 0.4rem 0.75rem !important;
+  font-size: 0.8rem !important;
+  transition: 0.2s ease;
+}
+
+.fc-button:hover {
+  background: #3a56d4 !important;
+}
+
+.fc-button:disabled {
+  background: #e6e9ff !important;
+  color: #4361ee !important;
+}
+
+.fc-daygrid-day {
+  transition: background 0.2s ease;
+}
+
+.fc-daygrid-day:hover {
+  background: rgba(67, 97, 238, 0.04);
+}
+
+/* Events */
+.fc-event {
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.fc-event-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Modal overlay */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal content */
+.modal-content {
+  background: #ffffff;
+  padding: 1.75rem;
+  border-radius: 14px;
+  width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2b2d42;
+}
+
+.modal-content p {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Close button */
+.close-btn {
+  float: right;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  transition: 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #f72585;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin: 15px;
+    padding: 18px;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+}
+</style>
+
   </style>
 </head>
 <body>

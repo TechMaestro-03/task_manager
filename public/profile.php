@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-size:13px;
             font-family: 'Inter', sans-serif;
         }
 

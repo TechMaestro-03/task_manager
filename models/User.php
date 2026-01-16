@@ -47,7 +47,7 @@ class User {
 
     // Get user by ID
     public function getUserById($userId) {
-        $stmt = $this->conn->prepare("SELECT id, name, email, role, created_at FROM users WHERE id = ?");
+        $stmt = $this->conn->prepare("SELECT id, name, email, role, created_at, email_notifications, push_notifications, daily_summary, theme FROM users WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -97,6 +97,42 @@ class User {
     public function getUserCount() {
         $result = $this->conn->query("SELECT COUNT(*) as count FROM users WHERE role = 'user'");
         return $result->fetch_assoc()['count'];
+    }
+
+    // ===== NEW METHODS FOR SETTINGS.PHP =====
+
+    // Update notification preferences
+    public function updateNotificationPreferences($userId, $email, $push, $daily)
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE users 
+             SET email_notifications = ?, 
+                 push_notifications = ?, 
+                 daily_summary = ? 
+             WHERE id = ?"
+        );
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("iiii", $email, $push, $daily, $userId);
+        return $stmt->execute();
+    }
+
+    // Update theme preference
+    public function updateThemePreference($userId, $theme)
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE users SET theme = ? WHERE id = ?"
+        );
+
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("si", $theme, $userId);
+        return $stmt->execute();
     }
 }
 ?>

@@ -91,6 +91,7 @@ $tasks = $conn->query("SELECT tasks.*,
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-size:13px;
             font-family: 'Inter', sans-serif;
         }
 
@@ -149,8 +150,8 @@ $tasks = $conn->query("SELECT tasks.*,
         }
 
         .dashboard-title {
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-size: 1.65rem;
+            font-weight: 500;
             color: var(--text);
         }
 
@@ -365,6 +366,93 @@ $tasks = $conn->query("SELECT tasks.*,
                 display: none;
             }
         }
+        /* =========================
+   RESPONSIVE TABLE
+   ========================= */
+
+@media (max-width: 992px) {
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .admin-nav {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-container {
+    width: 100%;
+  }
+
+  .stat-card {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
+
+/* Mobile table -> cards */
+@media (max-width: 768px) {
+
+  .task-table-container {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .task-table,
+  .task-table thead,
+  .task-table tbody,
+  .task-table th,
+  .task-table td,
+  .task-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .task-table thead {
+    display: none;
+  }
+
+  .task-table tr {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .task-table td {
+    padding: 0.5rem 0;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  
+
+  .task-table td > * {
+    flex: 2;
+    text-align: right;
+  }
+
+  .action-btns {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .admin-nav a span {
+    display: none;
+  }
+}
+
     </style>
 </head>
 <body>

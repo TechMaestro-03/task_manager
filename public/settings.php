@@ -5,6 +5,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../controllers/AuthController.php';
 
+// Redirect if not logged in
 if (!AuthController::isUser()) {
     header("Location: login.php");
     exit();
@@ -26,11 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_notifications'
         $daily_summary
     );
 
-    if ($success) {
-        $_SESSION['success'] = "Notification preferences updated successfully!";
-    } else {
-        $_SESSION['error'] = "Failed to update notification preferences";
-    }
+    $_SESSION[$success ? 'success' : 'error'] = $success
+        ? "Notification preferences updated successfully!"
+        : "Failed to update notification preferences";
+
     header("Location: settings.php");
     exit();
 }
@@ -38,33 +38,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_notifications'
 // Handle theme preference update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
     $theme = $_POST['theme'];
-    
+
     if (in_array($theme, ['light', 'dark', 'system'])) {
         $success = $userModel->updateThemePreference($_SESSION['user_id'], $theme);
-        
-        if ($success) {
-            $_SESSION['success'] = "Theme preference updated successfully!";
-            $_SESSION['theme'] = $theme; // Update session
-        } else {
-            $_SESSION['error'] = "Failed to update theme preference";
-        }
+        $_SESSION[$success ? 'success' : 'error'] = $success
+            ? "Theme preference updated successfully!"
+            : "Failed to update theme preference";
+        if ($success) $_SESSION['theme'] = $theme;
     } else {
         $_SESSION['error'] = "Invalid theme selection";
     }
+
     header("Location: settings.php");
     exit();
 }
+
+$theme = $_SESSION['theme'] ?? 'light';
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-theme="<?= $_SESSION['theme'] ?? 'light' ?>">
+<html lang="en" data-theme="<?= $theme ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | Task Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
     <style>
         :root {
             --primary: #4361ee;
@@ -87,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
         * {
             margin: 0;
             padding: 0;
+            font-size:13px;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
         }
@@ -370,7 +372,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1.0rem;
+            margin:10px;
+            align-items:center;
+            justify-content:center;
         }
 
         .btn-primary {
@@ -469,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
         .settings-card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow);
             margin-bottom: 2rem;
         }
@@ -494,6 +499,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
         .settings-form {
             display: grid;
             gap: 1.5rem;
+
+        }
+        h2{
+            margin-bottom:10px;
+        }
+        h3{
+            margin-bottom:10px;
         }
 
         .form-group {
@@ -527,10 +539,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
+            margin-top:15px;
+            padding: 0.65rem 0.8rem;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 300;
             cursor: pointer;
             transition: var(--transition);
             width: fit-content;
@@ -560,156 +573,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_theme'])) {
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">
-                <i class="fas fa-tasks"></i>
-            </div>
-            <div class="brand-text">TaskFlow</div>
-        </div>
-
+        <div class="brand"><div class="brand-icon"><i class="fas fa-tasks"></i></div> <div class="brand-text">TaskFlow</div></div>
         <nav class="nav-menu">
-            <a href="user-dashboard.php" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="calendar.php" class="nav-item">
-                <i class="fas fa-calendar"></i>
-                <span>Calendar</span>
-            </a>
-            <a href="profile.php" class="nav-item">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
-            <a href="settings.php" class="nav-item active">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
+            <a href="user-dashboard.php" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="calendar.php" class="nav-item"><i class="fas fa-calendar"></i> Calendar</a>
+            <a href="profile.php" class="nav-item"><i class="fas fa-user"></i> Profile</a>
+            <a href="settings.php" class="nav-item active"><i class="fas fa-cog"></i> Settings</a>
         </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Bar -->
         <div class="top-bar">
             <div class="user-info">
-                <div class="user-avatar"><?= substr($_SESSION['name'], 0, 1) ?></div>
+                <div class="user-avatar"><?= strtoupper(substr($_SESSION['name'],0,1)) ?></div>
                 <div class="user-name">Hi, <?= htmlspecialchars($_SESSION['name']) ?></div>
             </div>
-            <a href="logout.php" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
+            <a href="logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
 
-        <!-- Settings Section -->
         <section class="settings-section">
-            <div class="section-header">
-                <h2 class="section-title">Settings</h2>
-            </div>
+            <h2>Settings</h2>
 
             <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
-                </div>
+                <div class="alert error"><i class="fas fa-exclamation-circle"></i> <?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert success">
-                    <i class="fas fa-check-circle"></i>
-                    <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
-                </div>
+                <div class="alert success"><i class="fas fa-check-circle"></i> <?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
             <?php endif; ?>
 
-            <div class="settings-container">
-                <!-- Notification Settings -->
-                <div class="settings-card">
-                    <div class="settings-header">
-                        <h3 class="settings-title">Notification Preferences</h3>
-                        <p class="settings-description">Manage how you receive notifications from TaskFlow</p>
+            <!-- Notification Preferences -->
+            <div class="settings-card">
+                <h3>Notification Preferences</h3>
+                <form method="POST" action="settings.php">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="email_notifications" name="email_notifications" <?= ($user['email_notifications'] ?? 1) ? 'checked' : '' ?>>
+                        <label for="email_notifications">Email Notifications</label>
                     </div>
-                    <form class="settings-form" method="POST" action="settings.php">
-                        <div class="form-group">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="email_notifications" name="email_notifications" 
-                                    <?= ($user['email_notifications'] ?? 1) ? 'checked' : '' ?>>
-                                <label for="email_notifications">Email Notifications</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="push_notifications" name="push_notifications"
-                                    <?= ($user['push_notifications'] ?? 1) ? 'checked' : '' ?>>
-                                <label for="push_notifications">Push Notifications</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="daily_summary" name="daily_summary"
-                                    <?= ($user['daily_summary'] ?? 1) ? 'checked' : '' ?>>
-                                <label for="daily_summary">Daily Summary Email</label>
-                            </div>
-                        </div>
-                        <button type="submit" name="update_notifications" class="btn-save">Save Preferences</button>
-                    </form>
-                </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="push_notifications" name="push_notifications" <?= ($user['push_notifications'] ?? 1) ? 'checked' : '' ?>>
+                        <label for="push_notifications">Push Notifications</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="daily_summary" name="daily_summary" <?= ($user['daily_summary'] ?? 1) ? 'checked' : '' ?>>
+                        <label for="daily_summary">Daily Summary Email</label>
+                    </div>
+                    <button type="submit" name="update_notifications" class="btn-save">Save Preferences</button>
+                </form>
+            </div>
 
-                <!-- Theme Settings -->
-                <div class="settings-card">
-                    <div class="settings-header">
-                        <h3 class="settings-title">Appearance</h3>
-                        <p class="settings-description">Customize how TaskFlow looks</p>
-                    </div>
-                    <form class="settings-form" method="POST" action="settings.php">
-                        <div class="form-group">
-                            <div class="radio-group">
-                                <div class="radio-option">
-                                    <input type="radio" id="light-theme" name="theme" value="light"
-                                        <?= ($_SESSION['theme'] ?? 'light') === 'light' ? 'checked' : '' ?>>
-                                    <label for="light-theme">Light</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" id="dark-theme" name="theme" value="dark"
-                                        <?= ($_SESSION['theme'] ?? 'light') === 'dark' ? 'checked' : '' ?>>
-                                    <label for="dark-theme">Dark</label>
-                                </div>
-                                <div class="radio-option">
-                                    <input type="radio" id="system-theme" name="theme" value="system"
-                                        <?= ($_SESSION['theme'] ?? 'light') === 'system' ? 'checked' : '' ?>>
-                                    <label for="system-theme">System Default</label>
-                                </div>
-                            </div>
+            <!-- Theme Preferences -->
+            <div class="settings-card">
+                <h3>Appearance</h3>
+                <form method="POST" action="settings.php">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="light-theme" name="theme" value="light" <?= $theme === 'light' ? 'checked' : '' ?>>
+                            <label for="light-theme">Light</label>
                         </div>
-                        <button type="submit" name="update_theme" class="btn-save">Save Theme</button>
-                    </form>
-                </div>
+                        <div class="radio-option">
+                            <input type="radio" id="dark-theme" name="theme" value="dark" <?= $theme === 'dark' ? 'checked' : '' ?>>
+                            <label for="dark-theme">Dark</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="system-theme" name="theme" value="system" <?= $theme === 'system' ? 'checked' : '' ?>>
+                            <label for="system-theme">System Default</label>
+                        </div>
+                    </div>
+                    <button type="submit" name="update_theme" class="btn-save">Save Theme</button>
+                </form>
+            </div>
 
-                <!-- Account Actions -->
-                <div class="settings-card">
-                    <div class="settings-header">
-                        <h3 class="settings-title">Account Actions</h3>
-                        <p class="settings-description">Manage your account</p>
-                    </div>
-                    <div class="settings-form">
-                        <div class="form-group">
-                            <a href="change_password.php" class="action-btn btn-outline">
-                                <i class="fas fa-key"></i>
-                                <span>Change Password</span>
-                            </a>
-                            <a href="deactivate_account.php" class="action-btn btn-outline" style="color: var(--danger);">
-                                <i class="fas fa-user-slash"></i>
-                                <span>Deactivate Account</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <!-- Account Actions -->
+            <div class="settings-card">
+                <h3>Account Actions</h3>
+                <a href="profile.php" class="btn-outline action-btn"><i class="fas fa-key"></i> Change Password</a>
+                <a href="deactivate_account.php" class="btn-outline action-btn" style="color:red;"><i class="fas fa-user-slash"></i> Deactivate Account</a>
             </div>
         </section>
     </main>
 
     <script>
-        // Apply theme immediately when changed
+        // Live theme preview
         document.querySelectorAll('input[name="theme"]').forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.checked) {
-                    document.documentElement.setAttribute('data-theme', this.value);
-                }
+                if(this.checked) document.documentElement.setAttribute('data-theme', this.value);
             });
         });
     </script>

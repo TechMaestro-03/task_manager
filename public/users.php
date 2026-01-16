@@ -73,11 +73,14 @@ $users = $conn->query("SELECT id, name, email, role FROM users ORDER BY name ASC
 <head>
   <meta charset="UTF-8">
   <title>Manage Users - Admin Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
     * {
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
+      font-size:13px;
     }
 
     body {
@@ -105,6 +108,30 @@ $users = $conn->query("SELECT id, name, email, role FROM users ORDER BY name ASC
     .navbar a:hover {
       text-decoration: underline;
     }
+          .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-links a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-links a i {
+        font-size: 14px;
+      }
+
+      .nav-links a:hover {
+        color: #0d6efd;
+      }
+
 
     .container {
       max-width: 1000px;
@@ -118,7 +145,8 @@ $users = $conn->query("SELECT id, name, email, role FROM users ORDER BY name ASC
     h1 {
       margin-bottom: 25px;
       color: #007bff;
-      font-size: 28px;
+      font-size: 20px;
+      font-weight:300;
       text-align: center;
     }
 
@@ -148,13 +176,13 @@ $users = $conn->query("SELECT id, name, email, role FROM users ORDER BY name ASC
     }
 
     .btn {
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: none;
       border-radius: 4px;
+      text-align:center;
       cursor: pointer;
       font-weight: bold;
       text-decoration:none;
-      width: 100%;
       transition: all 0.3s;
     }
 
@@ -245,17 +273,39 @@ $users = $conn->query("SELECT id, name, email, role FROM users ORDER BY name ASC
         font-weight: bold;
       }
     }
+     @media (max-width: 768px) {
+      .nav-links a span {
+        display: none;
+      }
+
+      .nav-links a i {
+        font-size: 18px;
+      }
+    }
+
   </style>
 </head>
 <body>
 
   <div class="navbar">
     <div><strong>Task Manager - Admin</strong></div>
-    <div>
-      <a href="admin-dashboard.php">Dashboard</a>
-      <a href="assign-task.php">Assign Task</a>
-      <a href="logout.php">Logout</a>
-    </div>
+    <div class="nav-links">
+  <a href="admin-dashboard.php">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Dashboard</span>
+  </a>
+
+  <a href="assign-task.php">
+    <i class="fas fa-user-plus"></i>
+    <span>Assign Task</span>
+  </a>
+
+  <a href="logout.php">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    <span>Logout</span>
+  </a>
+</div>
+
   </div>
 
   <div class="container">

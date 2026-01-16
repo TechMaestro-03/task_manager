@@ -40,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Login - Task Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; font-size:13px }
         body { margin: 0; background: #f4f7fa; display: flex; justify-content: center; align-items: center; height: 100vh; }
         .login-container { background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,123,255,0.2); width: 100%; max-width: 400px; }
         .login-container h2 { margin-bottom: 20px; color: #007BFF; text-align: center; }

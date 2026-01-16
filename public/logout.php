@@ -9,12 +9,13 @@ session_destroy();
 <head>
   <meta charset="UTF-8">
   <title>Logged Out</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <meta http-equiv="refresh" content="2;url=login.php">
   <style>
     * {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       box-sizing: border-box;
+      font-size:13px;
     }
     body {
       display: flex;
