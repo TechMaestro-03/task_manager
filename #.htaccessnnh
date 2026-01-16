@@ -1,0 +1,29 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect all requests to index.php (if using clean URLs)
+# Uncomment if you're using clean URLs (example.com/task/1)
+/*
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+*/
+
+# Deny direct access to config, models, and controllers
+<FilesMatch "^(db\.php|User\.php|Task\.php|.*Controller\.php)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Hide .php extension (optional)
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME}\.php -f
+# RewriteRule ^(.*)$ $1.php [L]
+
+# Basic security headers
+Header set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+
+# Default index file
+DirectoryIndex index.php
