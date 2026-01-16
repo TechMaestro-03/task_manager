@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         * {
             font-family: 'Poppins', sans-serif;
             box-sizing: border-box;
+            font-size:13px;
         }
 
         body {
